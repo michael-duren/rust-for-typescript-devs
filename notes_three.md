@@ -49,3 +49,63 @@ fn main() {
     let second = items.get_mut(1);
 }
 ```
+
+Iterator
+An iterator isn't just something we interact with, it's somthing we can also create
+Implement an iterator for Rectangle. It will iterate over the four points
+- struct RectIter with a points: Vec<(f64, f64)> and idx: usize
+- implement Iterator for RectIter
+- implement IntoIterator for Rectangle `src/main.rs`
+- create a rect
+- iteratove over a rect for `point` in rect printing out each point
+- print out the entire rectangle via the Display trait
+
+```rust
+impl Display for Rect {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        return write!(
+            f,
+            "Rectangle({}, {}): {}x{}",
+            self.x, self.y, self.width, self.height
+        );
+    }
+}
+
+pub struct RectIter {
+    points: Vec<(f64, f64)>,
+    idx: usize,
+}
+
+impl Iterator for RectIter {
+    type Item = (f64, f64);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let idx = self.idx;
+        self.idx += 1;
+
+        return self.points.get(idx).map(|x| *x); // * will copy out the value if it implements the copy trait
+    }
+}
+
+impl IntoIterator for Rect {
+    type Item = (f64, f64);
+
+    type IntoIter = RectIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        return RectIter {
+            points: vec![
+                (self.x, self.y),
+                (self.x + self.width, self.y),
+                (self.x, self.y + self.height),
+                (self.x + self.width, self.y + self.height),
+            ],
+            idx: 0,
+        };
+    }
+}
+```
+
+### IntoIterator
+It *consumes* the thing you give it, we need to give it something to consume that won't consume our original struct
+

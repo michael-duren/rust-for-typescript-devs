@@ -1,14 +1,29 @@
+use shapes::{circle::Circle, collisions::Collidable};
+
+use crate::shapes::rect::Rect;
+mod shapes; // make sure you use shapes.rs. First checks for a file named shapes.rs, then checks for a folder named shapes with a file called mod.rs (module)
+
 fn main() {
-    // let data = vec![1, 2, 3];
-    // let items = data.iter().map(|x| x + 1);
+    let rect = Rect::default(); // :: accesses the namespace
+    let rect2 = Rect {
+        x: 10.0,
+        y: 10.0,
+        width: 5.0,
+        height: 5.0,
+    };
 
-    // println!("{:?}", items);
-    assert_eq!(10, cooking_time(10));
-}
+    let circ = Circle {
+        x: 0.0,
+        y: 0.0,
+        radius: 10.0,
+    };
+    let circ2 = Circle {
+        x: 20.0,
+        y: 20.0,
+        radius: 50.0,
+    };
 
-fn cooking_time(eggs: u32) -> u32 {
-    let boiled_sets: u32 = eggs / 8 * 5;
-    let remainder: u32 = if eggs % 8 == 0 { 0 } else { 5 };
-
-    return boiled_sets + remainder;
+    rect.collide(&rect2);
+    circ.collide(&circ2);
+    rect.collide(&circ);
 }
